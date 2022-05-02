@@ -1,0 +1,36 @@
+.home {
+  .card-set-list {
+    display: grid;
+    gap: 24px 24px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
+    .card-set {
+      position: relative;
+      height: 180px;
+      background-size: cover;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+
+      .name {
+        &.bright {
+          color: #fff;
+        }
+      }
+
+      .el-dropdown {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        padding: 0 4px;
+        border-radius: 2px;
+        background-color: rgba($color: #000000, $alpha: 0.5);
+        font-size: 18px;
+
+        :deep(.el-tooltip__trigger) {
+          display: flex;
+        }
+      }
+    }
+  }
+}
