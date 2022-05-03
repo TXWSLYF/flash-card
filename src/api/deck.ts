@@ -1,26 +1,33 @@
 import axiosInstance from ".";
 
+export interface IDeck {
+  id: number;
+  userId: number | null;
+  deckName?: string | null;
+  deckDescription?: string | null;
+  coverUrl?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 /**
  * @description 获取用户卡片集列表
  */
-export const getUserDecks = () => axiosInstance.get('/userDecks')
+export const getUserDecks = () => axiosInstance.get<IDeck[]>("/userDecks");
 
-interface deckBody {
-  deckName: string,
-  deckDescription?: string
-  coverUrl?: string
-}
 /**
  * @description 新增卡片集
  */
-export const addDeck = (body: deckBody) => axiosInstance.post('/decks', body)
+export const addDeck = (body: Partial<IDeck>) =>
+  axiosInstance.post("/decks", body);
 
 /**
  * @description 修改卡片集信息
  */
-export const updateDeckInfo = (id: string, body: deckBody) => axiosInstance.put(`decks/${id}`, body)
+export const updateDeckInfo = (id: number, body: Partial<IDeck>) =>
+  axiosInstance.put(`decks/${id}`, body);
 
 /**
  * @description 删除卡片集
  */
-export const deleteDeck = (id: string) => axiosInstance.delete(`decks/${id}`)
+export const deleteDeck = (id: number) => axiosInstance.delete(`decks/${id}`);

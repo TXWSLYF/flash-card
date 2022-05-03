@@ -5,9 +5,9 @@
       <el-button @click="addCardSet">新建卡片集</el-button>
     </header>
     <main class="card-set-list">
-      <div v-for="{ name, coverUrl, id } in cardSetList" class="card-set"
+      <div v-for="{ deckName, coverUrl, id } in cardSetList" class="card-set"
         :style="{ backgroundImage: `url(${coverUrl})` }" :key="id" @click.self="openCardSet(id)">
-        <span class="name" :class="{ bright: coverUrl }">{{ name }}</span>
+        <span class="name" :class="{ bright: coverUrl }">{{ deckName }}</span>
         <el-dropdown trigger="click">
           <el-icon>
             <MoreFilled></MoreFilled>
@@ -27,28 +27,19 @@
 import { MoreFilled } from '@element-plus/icons-vue';
 import { onMounted, Ref, ref } from 'vue';
 import { useRouter } from "vue-router";
-import { addDeck, deleteDeck, getUserDecks } from "@/api/deck";
+import { addDeck, deleteDeck, getUserDecks, IDeck } from "@/api/deck";
 
-interface cardSet {
-  name: string,
-  coverUrl: string
-  id: string
-}
 /**
  * @description 卡片集列表
  */
-const cardSetList: Ref<cardSet[]> = ref([])
+const cardSetList: Ref<IDeck[]> = ref([])
 /**
  * @description 获取用户卡片集列表
  */
 const getCardSetList = async () => {
   try {
-    const { data } = await getUserDecks()
-    cardSetList.value = data.data.map((item: any) => ({
-      name: item.deckName,
-      coverUrl: item.coverUrl || '',
-      id: item.id
-    }))
+    const userDecks = await getUserDecks()
+    cardSetList.value = userDecks.data
   } catch (error) {
     console.warn(error);
   }
@@ -66,7 +57,6 @@ const addCardSet = async () => {
       deckName: '标题',
       coverUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg2.niutuku.com%2Fdesk%2F1208%2F1354%2Fntk-1354-31810.jpg&refer=http%3A%2F%2Fimg2.niutuku.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654003960&t=142e6358000d09b72b6b6d83b2c96450'
     })
-    console.log(data);
     getCardSetList()
   } catch (error) {
     console.warn(error);
@@ -79,7 +69,7 @@ const addCardSet = async () => {
 /**
  * @description 删除卡片集
  */
-const deleteCardSet = async (id: string) => {
+const deleteCardSet = async (id: number) => {
   try {
     await deleteDeck(id)
     getCardSetList()
@@ -92,7 +82,7 @@ const router = useRouter()
 /**
  * @description 打开卡片集详情页
  */
-const openCardSet = (id: string) => {
+const openCardSet = (id: number) => {
   router.push({ name: 'CardSet', params: { id } })
 }
 </script>
